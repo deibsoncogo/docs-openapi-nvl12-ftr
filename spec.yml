@@ -1,0 +1,70 @@
+openapi: 3.1.0
+
+info:
+  title: Example API Docs
+  version: 1.0.0
+
+paths:
+  /users:
+    get:
+      summary: Get all users
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - email
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: [string, "null"]
+          maxLength: 100
+        email:
+          type: string
+          format: email
+
+    UserInput:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: [string, "null"]
+          maxLength: 100
+        email:
+          type: string
+          format: email

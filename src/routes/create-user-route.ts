@@ -4,6 +4,7 @@ export const createUserRoute: FastifyPluginAsync = async (app) => {
   app.post("/users", {
     schema: {
       summary: "Create an users",
+      security: [{ bearerAuth: [] }],
       body: {
         type: "object",
         examples: [{

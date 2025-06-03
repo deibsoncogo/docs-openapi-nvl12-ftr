@@ -16,6 +16,16 @@ app.register(fastifySwagger, {
     info: {
       title: "Docs Open API NVL 12 FTR",
       version: "1.0.0",
+    },
+
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        }
+      }
     }
   }
 })

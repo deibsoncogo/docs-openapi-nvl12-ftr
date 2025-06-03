@@ -1,7 +1,9 @@
 import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
+import scalarUI from "@scalar/fastify-api-reference";
 import fastify from "fastify";
-import scalarUI from "@scalar/fastify-api-reference"
+import { createUserRoute } from "./routes/create-user-route.ts";
+import { getUsersRoute } from "./routes/get-users-route.ts";
 
 const app = fastify()
 
@@ -18,6 +20,9 @@ app.register(fastifySwagger, {
   }
 })
 
+app.register(createUserRoute)
+app.register(getUsersRoute)
+
 app.get("/openapi.json", () => app.swagger())
 
 app.register(scalarUI, {
@@ -28,5 +33,5 @@ app.register(scalarUI, {
 })
 
 app.listen({ port: 3333 }).then(() => {
-  console.log("HTTP server running!") ;
+  console.log("HTTP server running!");
 })

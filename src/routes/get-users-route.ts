@@ -1,4 +1,4 @@
-import { FastifyPluginAsync } from "fastify";
+import type { FastifyPluginAsync } from "fastify";
 
 export const getUsersRoute: FastifyPluginAsync = async (app) => {
   app.get("/users", {

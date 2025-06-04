@@ -2,10 +2,14 @@ import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
 import scalarUI from "@scalar/fastify-api-reference";
 import fastify from "fastify";
+import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
 import { createUserRoute } from "./routes/create-user-route.ts";
 import { getUsersRoute } from "./routes/get-users-route.ts";
 
 const app = fastify()
+
+app.setValidatorCompiler(validatorCompiler)
+app.setSerializerCompiler(serializerCompiler)
 
 app.register(fastifyCors, {
   origin: "*"
@@ -27,7 +31,9 @@ app.register(fastifySwagger, {
         }
       }
     }
-  }
+  },
+
+  transform: jsonSchemaTransform
 })
 
 app.register(createUserRoute)

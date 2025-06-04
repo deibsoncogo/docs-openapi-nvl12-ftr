@@ -1,70 +1,35 @@
-import type { FastifyPluginAsync } from "fastify";
+import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
+import { z } from "zod";
 
-export const createUserRoute: FastifyPluginAsync = async (app) => {
+export const createUserRoute: FastifyPluginAsyncZod = async (app) => {
   app.post("/users", {
     schema: {
       summary: "Create an users",
       security: [{ bearerAuth: [] }],
-      body: {
-        type: "object",
-        examples: [{
-          name: "John Doe",
-          email: "john.doe@example.com"
-        }],
-        properties: {
-          name: {
-            type: ["string", "null"],
-            maxLength: 100
-          },
-          email: {
-            type: "string",
-            format: "email"
-          }
-        }
-      },
+      body: z.object({
+        name: z.string().max(100).nullable(),
+        email: z.string().email(),
+      }),
       response: {
-        201: {
-          description: "User created",
-          type: "object",
-          properties: {
-            userId: {
-              type: "string",
-              format: "uuid",
-              description: "New user ID"
-            }
-          }
-        },
+        201: z.object({
+          userId: z.string().uuid().describe("New user ID"),
+        }).describe("User created"),
 
-        400: {
-          description: "Validation fails",
-          type: "object",
-          properties: {
-            error: {
-              type: "array",
-              items: {
-                type: "object",
-                required: ["name", "error"],
-                properties: {
-                  name: { type: "string" },
-                  error: { type: "string" },
-                }
-              }
-            }
-          }
-        },
+        400: z.object({
+          errors: z.array(
+            z.object({
+              name: z.string(),
+              error: z.string(),
+            })
+          )
+        }).describe("Validation failed"),
 
-        409: {
-          description: "User e-mail already exists",
-          type: "object",
-          properties: {
-            message: {
-              type: "string",
-            }
-          }
-        }
-      }
-    }
+        409: z.object({
+          message: z.string(),
+        }).describe("User e-mail already exists"),
+      },
+    },
   }, () => {
-    return { userId: 123 }
+    return { userId: "f8b1c2d3-4e5f-6a7b-8c9d-e0f1g2h3i4j5" }
   })
 }
